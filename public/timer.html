@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="theme-color" content="#c01d2e">
+        
+        <title>Interval Timer</title>
+        
+        <link rel="stylesheet" type="text/css" media="screen" href="styles/materialize.min.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="styles/inline.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="styles/clearfix.css">
+        <link rel="canonical" href="https://level-red-boxing-timer.firebaseapp.com/">
+        <link rel="manifest" href="/manifest.json">
+
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="apple-mobile-web-app-title" content="LRB Timer">
+        <link rel="apple-touch-icon" href="images/icons/icon-152x152.png">
+        <meta name="msapplication-TileImage" content="images/icons/icon-144x144.png">
+        <meta name="msapplication-TileColor" content="#c01d2e">
+
+        <link rel="icon" type="image/png" href="images/icons/favicon-32x32.png" sizes="32x32">
+        <link rel="icon" type="image/png" href="images/icons/favicon-194x194.png" sizes="194x194">
+        <link rel="icon" type="image/png" href="images/icons/android-chrome-192x192.png" sizes="192x192">
+        <link rel="icon" type="image/png" href="images/icons/favicon-16x16.png" sizes="16x16">
+        <link rel="manifest" href="manifest.json">
+        <link rel="mask-icon" href="images/icons/safari-pinned-tab.svg" color="#c01d2e">
+        <link rel="shortcut icon" href="favicon.ico">
+        <meta name="msapplication-config" content="browserconfig.xml">
+        <meta name="theme-color" content="#c01d2e">
+    </head>
+
+    <body>
+        <header class="header">
+            <h1 class="header__title">Level Red Boxing</h1>
+            <button id="btnStartWorkout" class="headerButton" aria-label="Start"></button>
+            <button id="btnPauseWorkout" class="headerButton" aria-label="Pause"></button>
+            <button id="btnEndWorkout" class="headerButton" aria-label="End"></button>
+        </header>
+        <!--<nav>
+            <div class="nav-wrapper">
+                <a href="/index.html" class="brand-logo">Level Red Boxing</a>
+                <ul id="nav-mobile" class="right">
+                    <li><button id="btnStartWorkout" class="headerButton" aria-label="Start"></button></li>
+                    <li><button id="btnPauseWorkout" class="headerButton" aria-label="Pause"></button></li>
+                    <li><button id="btnEndWorkout" class="headerButton" aria-label="End"></button></li>
+                </ul>
+            </div>
+        </nav>-->
+
+        <main class="main">
+            <div id="timer">
+                <div id="top-row" class="row valign-wrapper">
+                    <div id="primary-panel" class="col s8 valign center-align">
+                        <h5 id="section-name"></h5>
+                        <h2 id="exercise-name"></h2>
+                        <h5 id="set-count">Set <span id="set-current"></span> of <span id="set-total"></span></h5>
+                    </div>
+                    <div id="secondary-panel" class="col s4 center-align">
+                        <h5>Next Up</h5>
+                        <h4 id="next-exercise-name"></h4>
+                        <h5 id="next-exercise-time"></h5>
+                    </div>
+                </div>
+                <div id="bottom-row" class="row valign-wrapper">
+                    <div id="elapsed-panel" class="col s4 valign center-align">
+                        
+                    </div>
+                    <div id="sets-panel" class="col s4 valign center-align">
+                        Interval <span id="sets-current"></span> / <span id="sets-total"></span>
+                    </div>
+                    <div id="remaining-panel" class="col s4 valign center-align"></div>
+                </div>
+            </div>
+        </main>
+
+        <div class="loader">
+            <svg viewBox="0 0 32 32" width="32" height="32">
+                <circle id="spinner" cx="16" cy="16" r="14" fill="none"></circle>
+            </svg>
+        </div>
+
+        <script src="scripts/jquery-3.1.1.min.js"></script>
+        <script src="scripts/materialize.min.js"></script>
+        <script src="scripts/pouchdb-6.1.1.min.js"></script>
+        <script src="scripts/firebase-3.6.8.min.js"></script>
+        <script src="scripts/timerApp.js" async></script>
+
+    </body>
+</html>

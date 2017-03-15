@@ -1,0 +1,39 @@
+timer
+-add time remaining calculation to timer
+-full timer test
+-handle end of timer (clearInterval and icons)
+-add logo to corner
+-hide navbar
+-add boxing clap at 5 second mark to signal upcoming change?
+-  3 second countdown? (voice going 3, 2, 1 vs. beep, beep beep)
+
+
+
+form
+-try to utilize cloneNode for templates on form
+-fix edit form when adding exercise to interval, and interval to section, etc.
+-enable drag and drop of templates in workout edit/add 
+-move buttons around on workout edit to be clearer
+    -different colors for each card-panel of each type (section, interval, exercise) ?
+-remove time type field (assume everything is seconds)
+-add total time calculation on workout edit
+
+
+list
+-clicking on card loads timer (no load link)
+-change color of card-action links (not gold/yellow)
+
+
+general
+-Add spinner/preloader to page "loads"
+-enable offline capabilities with firebase
+    -service-worker.js caching
+    -svg/png image backups for material icons
+-clean up old files
+-test against PWA requirements
+    -get add to homescreen banner working automatically
+    -move css loads to footer?
+    -change mouse pointer on a tags without hrefs (change to flat buttons in materialize?)
+-setup custom domain name (use godaddy account)
+    -timer.levelredboxing.com
+-add user accounts (via firebase)

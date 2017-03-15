@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="theme-color" content="#c01d2e">
+        <meta name="mobile-web-app-capable" content="yes">
+        
+        <title>Interval Timer</title>
+        
+        <link href="//fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" media="screen,projection" href="styles/materialize.min.css">
+        <link rel="canonical" href="https://level-red-boxing-timer.firebaseapp.com/">
+        <link rel="manifest" href="/manifest.json">
+
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="apple-mobile-web-app-title" content="LRB Timer">
+        <meta name="msapplication-TileImage" content="images/icons/icon-144x144.png">
+        <meta name="msapplication-TileColor" content="#c01d2e">
+        <meta name="msapplication-config" content="browserconfig.xml">
+
+        <link rel="apple-touch-icon" href="images/icons/icon-152x152.png">
+        <link rel="mask-icon" href="images/icons/safari-pinned-tab.svg" color="#c01d2e">
+        <link rel="icon" type="image/png" href="images/icons/favicon-32x32.png" sizes="32x32">
+        <link rel="icon" type="image/png" href="images/icons/favicon-194x194.png" sizes="194x194">
+        <link rel="icon" type="image/png" href="images/icons/android-chrome-192x192.png" sizes="192x192">
+        <link rel="icon" type="image/png" href="images/icons/favicon-16x16.png" sizes="16x16">
+        <link rel="shortcut icon" href="favicon.ico">
+
+        <style type="text/css">
+            #workout-timer {
+                height: 100%;
+            }
+
+                #workout-timer h1 {
+                    font-size: 250px;
+                    line-height: 250px;
+                }
+
+                #workout-timer h4 {
+                    font-size: 128px;
+                    line-height: 128px;
+                }
+
+                #workout-timer h6 {
+                    font-size: 72px;
+                    line-height: 72px;
+                }
+
+            body.timer {
+                background: url('images/icons/logo-bg.png') no-repeat;
+            }
+
+            #nav {
+                margin-top: 20px;
+                margin-right: 20px;
+            }
+        </style>
+    </head>
+
+    <body id="body">
+        <!--<div class="navbar-fixed">
+            <nav class="transparent">
+                <div class="nav-wrapper">
+                    <a href="index.html" class="brand-logo center">Level Red Boxing</a>
+                    <ul id="nav-mobile-left" class="left">
+                        <li id="nav-list-workout" hidden><a><i class="material-icons text-black">list</i></a></li>
+                    </ul>
+                    <ul id="nav-mobile" class="right">
+                        <li id="nav-refresh-workout"><a><i class="material-icons text-black">cached</i></a></li>
+                        <li id="nav-start-workout"><a><i class="material-icons text-black">play_arrow</i></a></li>
+                        <li id="nav-end-workout"><a><i class="material-icons text-black">stop</i></a></li>
+                    </ul>
+                </div>
+            </nav>
+        </div>-->
+
+        <div id="nav" class="row transparent" role="navigation">
+            <div class="col s12 right-align">
+                <span id="nav-list-workout" hidden><a><i class="material-icons black-text">list</i></a></span>
+                <span id="nav-refresh-workout"><a><i class="material-icons black-text">cached</i></a></span> 
+                <span id="nav-start-workout"><a><i class="material-icons black-text">play_arrow</i></a></span> 
+                <span id="nav-end-workout"><a><i class="material-icons black-text">stop</i></a></span> 
+            </div>
+        </div>
+
+        <main class="main transparent">
+            <div class="container">
+                <div class="row">
+                    <div id="workout-list">
+                        <div class="workout-template" hidden>
+                            <div class="col s12 m6">
+                                <div class="card grey lighten-3 hoverable">
+                                    <div class="card-content black-text">
+                                        <span class="card-title"></span>
+                                        <p>
+                                            <div class="workout-key" hidden></div>
+                                            <div class="sections"></div>
+                                            <div class="total-rounds"></div>
+                                            <div class="total-time"></div>
+                                        </p>
+                                    </div>
+                                    <div class="card-action red">
+                                        <a class="load-workout black-text"><strong>Load Timer</strong></a>
+                                        <!--<a class="edit-workout">Edit</a>
+                                        <a class="delete-workout">Delete</a>-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="workout-form" hidden>
+                <div class="row">
+                    <div class="col s12">
+                        <div class="card white">
+                            <div class="card-content black-text">
+                                <span class="card-title">Add/Edit Workout</span>
+                                <div class="row">
+                                    <form class="col s12">
+                                        <div id="workout-edit-placeholder">
+                                            <div class="row">
+                                                <div class="input-field col s12">
+                                                    <input id="workout-name" type="text" class="validate">
+                                                    <label for="workout-name">Workout Name</label>
+                                                </div>
+                                            </div>
+                                            <div id="workout-section-placeholder"></div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="card-action">
+                                <a id="save-workout-form">Save</a>
+                                <a id="cancel-workout-form">Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="workout-timer" hidden>
+                <div class="row valign-wrapper">
+                    <div class="col s12 valign center-align">
+                        <h4 id="exercise-name"></h4>
+                        <h1 id="exercise-time-remaining"></h1>
+                        <h6 id="next-exercise-name"></h6>
+                    </div>
+                </div>
+
+                <!--<div class="row valign-wrapper">
+                    <div class="col s8 valign center-align">
+                        <h5 id="section-name"></h5>
+                        <h2 id="exercise-name"></h2>
+                        <h5 id="set-count">Set <span id="set-current"></span> of <span id="set-total"></span></h5>
+                    </div>
+                    <div class="col s4 valign center-align">
+                        <h5>Next Up</h5>
+                        <h4 id="next-exercise-name"></h4>
+                        <h5 id="next-exercise-time"></h5>
+                    </div>
+                </div>
+                <div class="row valign-wrapper">
+                    <div class="col s4 valign center-align">
+                        Elapsed<br />
+                        <span id="timer-elapsed"></span>
+                    </div>
+                    <div class="col s4 valign center-align">
+                        Interval<br />
+                        <span id="sets-current"></span> / <span id="sets-total"></span>
+                    </div>
+                    <div class="col s4 valign center-align">
+                        Remaining<br />
+                        <span id="timer-remaining"></span>
+                    </div>
+                </div>-->
+            </div>
+
+
+            <div id="delete-workout-modal" class="modal modal-fixed-footer">
+                <div class="modal-content">
+                    <h4>Delete workout?</h4>
+                    <p>Are you sure you want to delete this workout? This action cannot be reversed.</p>
+                    <p>Workout Key: <span id="modal-workout-key"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <a id="modal-delete-workout-btn" class="modal-action btn-flat">Delete Workout</a>
+                    <a class="modal-action modal-close btn-flat">Cancel</a>
+                </div>
+            </div>
+
+
+
+            <!--<div class="card-panel section-template" hidden>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="section-name-1" type="text" class="validate">
+                        <label for="section-name-1">Section Name<label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s12">
+                        <div class="section-interval-placeholder"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s6 left-align">
+                        <a class="btn red lighten-1 btn-add-section"><i class="material-icons">add</i></a>
+                    </div>
+                    <div class="col s6 right-align">
+                        <a class="btn red lighten-2 btn-delete-interval"><i class="material-icons">delete</i></a>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="card-panel interval-template" hidden>
+                <div class="row">
+                    <div class="col s8 input-field">
+                        <label>Interval</label>
+                    </div>
+                    <div class="col s4 input-field">
+                        <input id="interval-sets-1" type="text" class="validate">
+                        <label for="interval-sets-1"># of Sets</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s12">
+                        <div class="interval-exercise-placeholder"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s6 left-align">
+                        <a class="btn red lighten-1 btn-add-interval"><i class="material-icons">add</i></a>
+                    </div>
+                    <div class="col s6 right-align">
+                        <a class="btn red lighten-2 btn-delete-interval"><i class="material-icons">delete</i></a>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="card-panel exercise-template" hidden>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="exercise-name-1" type="text" class="validate">
+                        <label for="exercise-name-1">Exercise Name<label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s6">
+                        <input id="exercise-time-1" type="text" class="validate">
+                        <label for="exercise-time-1">Time</label>
+                    </div>
+                    <div class="input-field col s6">
+                        <select id="exercise-period-1" class="validate">
+                            <option value="s" selected>Seconds</option>
+                            <option value="m">Minutes</option>
+                        </select>
+                        <label for="exercise-period-1">Type</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s6 left-align">
+                        <a class="btn red lighten-1 btn-add-exercise"><i class="material-icons">add</i></a>
+                    </div>
+                    <div class="col s6 right-align">
+                        <a class="btn red lighten-2 btn-delete-exercise"><i class="material-icons">delete</i></a>
+                    </div>
+                </div>
+            </div>-->
+
+
+
+        </main>
+
+        <div class="loader">
+            <svg viewBox="0 0 32 32" width="32" height="32">
+                <circle id="spinner" cx="16" cy="16" r="14" fill="none"></circle>
+            </svg>
+        </div>
+
+        <script src="scripts/jquery-3.1.1.min.js"></script>
+        <script src="scripts/materialize.min.js"></script>
+        <script src="scripts/firebase-3.6.8.min.js"></script>
+        <script src="scripts/easytimer.min.js"></script>
+        <script src="scripts/soundjs-0.6.2.min.js"></script>
+        <script src="scripts/app.js"></script>
+    </body>
+</html>
