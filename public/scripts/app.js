@@ -137,7 +137,7 @@
     };
 
     app.preloadWorkoutList = function() {
-        var workout30 = "{\"name\":\"30 Minutes\",\"createdOn\":\"2017-02-13\",\"sections\":[{\"name\":\"Warmup\",\"intervals\":[{\"sets\":1,\"exercises\":[{\"name\":\"Cardio\",\"time\":5},{\"name\":\"Rest\",\"time\":1}]}]},{\"name\":\"Boxing\",\"intervals\":[{\"sets\":4,\"exercises\":[{\"name\":\"Boxing\",\"time\":3},{\"name\":\"Rest\",\"time\":1}]}]},{\"name\":\"Cool Down\",\"intervals\":[{\"sets\":1,\"exercises\":[{\"name\":\"Core\",\"time\":8}]}]}]}";
+        var workout30 = "{\"name\":\"30 Minutes\",\"createdOn\":\"2017-02-13\",\"sections\":[{\"name\":\"Warmup\",\"intervals\":[{\"sets\":1,\"exercises\":[{\"name\":\"Cardio\",\"time\":5},{\"name\":\"Rest\",\"time\":1}]}]},{\"name\":\"Boxing\",\"intervals\":[{\"sets\":5,\"exercises\":[{\"name\":\"Boxing\",\"time\":3},{\"name\":\"Rest\",\"time\":1,\"skipLast\":true}]}]},{\"name\":\"Cool Down\",\"intervals\":[{\"sets\":1,\"exercises\":[{\"name\":\"Core\",\"time\":5}]}]}]}";
         
         var workout60 = "{\"name\":\"60 Minutes\",\"createdOn\":\"2017-02-13\",\"sections\":[{\"name\":\"Warmup\",\"intervals\":[{\"sets\":1,\"exercises\":[{\"name\":\"Cardio\",\"time\":15},{\"name\":\"Rest\",\"time\":1}]}]},{\"name\":\"Boxing\",\"intervals\":[{\"sets\":8,\"exercises\":[{\"name\":\"Boxing\",\"time\":3},{\"name\":\"Rest\",\"time\":1}]}]},{\"name\":\"Cool Down\",\"intervals\":[{\"sets\":1,\"exercises\":[{\"name\":\"Core\",\"time\":12}]}]}]}";
 
@@ -165,13 +165,47 @@
             sections: 0
         };
 
+        // for (var i = 0; i < workout.sections.length; i++) {
+        //     for (var j = 0; j < workout.sections[i].intervals.length; j++) {
+        //         var sectionRounds = workout.sections[i].intervals[j].sets * workout.sections[i].intervals[j].exercises.length;
+        //         output.rounds += sectionRounds;
+                
+        //         for (var k = 0; k < workout.sections[i].intervals[j].exercises.length; k++) {
+        //             var skip = false;
+                    
+        //             //last exercise in the last set, if set to skip
+        //             if (workout.sections[i].intervals[j].exercises[k].skipLast != null) {
+        //                 skip = Boolean(workout.sections[i].intervals[j].exercises[k].skipLast) && 
+        //                         (k == workout.sections[i].intervals[j].exercises.length-1) && 
+        //                         (workout.sections[i].intervals[j].sets+1 == Number(workout.sections[i].intervals[j].sets));
+        //             }
+
+        //             if (!skip) {
+        //                 output.timeSeconds += ((workout.sections[i].intervals[j].exercises[k].time * 60) * workout.sections[i].intervals[j].sets);
+        //             }
+        //         }
+        //     }
+        // }
+
         for (var i = 0; i < workout.sections.length; i++) {
             for (var j = 0; j < workout.sections[i].intervals.length; j++) {
-                var sectionRounds = workout.sections[i].intervals[j].sets * workout.sections[i].intervals[j].exercises.length;
-                output.rounds += sectionRounds;
-                
-                for (var k = 0; k < workout.sections[i].intervals[j].exercises.length; k++) {
-                    output.timeSeconds += ((workout.sections[i].intervals[j].exercises[k].time * 60) * workout.sections[i].intervals[j].sets);
+                var sets = workout.sections[i].intervals[j].sets;
+                for (var k = 0; k < sets; k++) {
+                    for (var m = 0; m < workout.sections[i].intervals[j].exercises.length; m++) {
+                        output.rounds++;
+                        
+                        var skip = false;
+                        //last exercise in the last set, if set to skip
+                        if (workout.sections[i].intervals[j].exercises[m].skipLast != null) {
+                            skip = Boolean(workout.sections[i].intervals[j].exercises[m].skipLast) && 
+                                    (m == workout.sections[i].intervals[j].exercises.length-1) && 
+                                    (k+1 == sets);
+                        }
+                        
+                        if (!skip) {
+                            output.timeSeconds += (Number(workout.sections[i].intervals[j].exercises[m].time) * 60);
+                        }
+                    }
                 }
             }
         }
@@ -196,28 +230,38 @@
                 var sets = workout.sections[i].intervals[j].sets;
                 for (var k = 0; k < sets; k++) {
                     for (var m = 0; m < workout.sections[i].intervals[j].exercises.length; m++) {
-                        sequence.push({
-                            workoutCurrent: sequenceCounter,
+                        var skip = false;
+                        //last exercise in the last set, if set to skip
+                        if (workout.sections[i].intervals[j].exercises[m].skipLast != null) {
+                            skip = Boolean(workout.sections[i].intervals[j].exercises[m].skipLast) && 
+                                    (m == workout.sections[i].intervals[j].exercises.length-1) && 
+                                    (k+1 == sets);
+                        }
+                        
+                        if (!skip) {
+                            sequence.push({
+                                workoutCurrent: sequenceCounter,
 
-                            sectionCurrent: i+1,
-                            sectionTotal: workout.sections.length,
-                            section: workout.sections[i].name,
+                                sectionCurrent: i+1,
+                                sectionTotal: workout.sections.length,
+                                section: workout.sections[i].name,
 
-                            setCurrent: k+1,
-                            setTotal: sets,
+                                setCurrent: k+1,
+                                setTotal: sets,
 
-                            startTime: timeCounter,
-							endTime: timeCounter + (Number(workout.sections[i].intervals[j].exercises[m].time) * 60) - 1,
+                                startTime: timeCounter,
+                                endTime: timeCounter + (Number(workout.sections[i].intervals[j].exercises[m].time) * 60) - 1,
 
-                            // intervalCurrent: j+1,
-                            // intervalSetTotal: (sets * (workout.sections[i].section.intervals.length)),
-                            
-                            exeriseCurrent: m+1,
-                            exercise: workout.sections[i].intervals[j].exercises[m].name,
-                            exerciseTime: (Number(workout.sections[i].intervals[j].exercises[m].time) * 60)
-                        });
-                        sequenceCounter++;
-						timeCounter = timeCounter + (Number(workout.sections[i].intervals[j].exercises[m].time) * 60);
+                                // intervalCurrent: j+1,
+                                // intervalSetTotal: (sets * (workout.sections[i].section.intervals.length)),
+                                
+                                exeriseCurrent: m+1,
+                                exercise: workout.sections[i].intervals[j].exercises[m].name,
+                                exerciseTime: (Number(workout.sections[i].intervals[j].exercises[m].time) * 60)
+                            });
+                            sequenceCounter++;
+                            timeCounter = timeCounter + (Number(workout.sections[i].intervals[j].exercises[m].time) * 60);
+                        }
                     }
                 }
             }
