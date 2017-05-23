@@ -43,6 +43,7 @@
         exerciseTemplate: document.querySelector('.exercise-template'),
 
         navStartBtn: document.querySelector('#nav-start-workout'),
+        //navPauseBtn: document.querySelector('#nav-pause-workout'),
         navEndBtn: document.querySelector('#nav-end-workout'),
         //navAddBtn: document.querySelector('#nav-add-workout'),
         navRefreshBtn: document.querySelector('#nav-refresh-workout'),
@@ -54,6 +55,7 @@
     app.init = function() {
         //hide timer nav buttons
         app.navStartBtn.setAttribute('hidden', true);
+        //app.navPauseStartBtn.setAttribute('hidden', true);
         app.navEndBtn.setAttribute('hidden', true);
 
         //firebase event listeners
@@ -87,6 +89,10 @@
         app.navStartBtn.addEventListener('click', function() {
             app.startWorkoutTimer();
         });
+
+        // app.navPauseBtn.addEventListener('click', function() {
+        //     app.pauseWorkoutTimer();
+        // });
 
         app.navEndBtn.addEventListener('click', function() {
             app.endWorkoutTimer();
@@ -137,13 +143,16 @@
     };
 
     app.preloadWorkoutList = function() {
+        var workoutIntro = "{\"name\":\"30 Minute Intro\",\"createdOn\":\"2017-05-22\",\"sections\":[{\"name\":\"Warmup\",\"intervals\":[{\"sets\":1,\"exercises\":[{\"name\":\"Cardio\",\"time\":5},{\"name\":\"Rest\",\"time\":1}]}]},{\"name\":\"Boxing\",\"intervals\":[{\"sets\":5,\"exercises\":[{\"name\":\"Boxing\",\"time\":3},{\"name\":\"Rest\",\"time\":1,\"skipLast\":true}]}]},{\"name\":\"Cool Down\",\"intervals\":[{\"sets\":1,\"exercises\":[{\"name\":\"Core\",\"time\":5}]}]}]}";
+        
         var workout30 = "{\"name\":\"30 Minutes\",\"createdOn\":\"2017-02-13\",\"sections\":[{\"name\":\"Warmup\",\"intervals\":[{\"sets\":1,\"exercises\":[{\"name\":\"Cardio\",\"time\":5},{\"name\":\"Rest\",\"time\":1}]}]},{\"name\":\"Boxing\",\"intervals\":[{\"sets\":5,\"exercises\":[{\"name\":\"Boxing\",\"time\":3},{\"name\":\"Rest\",\"time\":1,\"skipLast\":true}]}]},{\"name\":\"Cool Down\",\"intervals\":[{\"sets\":1,\"exercises\":[{\"name\":\"Core\",\"time\":5}]}]}]}";
         
         var workout60 = "{\"name\":\"60 Minutes\",\"createdOn\":\"2017-02-13\",\"sections\":[{\"name\":\"Warmup\",\"intervals\":[{\"sets\":1,\"exercises\":[{\"name\":\"Cardio\",\"time\":15},{\"name\":\"Rest\",\"time\":1}]}]},{\"name\":\"Boxing\",\"intervals\":[{\"sets\":8,\"exercises\":[{\"name\":\"Boxing\",\"time\":3},{\"name\":\"Rest\",\"time\":1}]}]},{\"name\":\"Cool Down\",\"intervals\":[{\"sets\":1,\"exercises\":[{\"name\":\"Core\",\"time\":12}]}]}]}";
 
         var workout90 = "{\"name\":\"90 Minutes\",\"createdOn\":\"2017-02-13\",\"sections\":[{\"name\":\"Warmup\",\"intervals\":[{\"sets\":1,\"exercises\":[{\"name\":\"Cardio\",\"time\":20},{\"name\":\"Rest\",\"time\":1}]}]},{\"name\":\"Boxing\",\"intervals\":[{\"sets\":6,\"exercises\":[{\"name\":\"Boxing\",\"time\":3},{\"name\":\"Rest\",\"time\":1}]}]},{\"name\":\"HIIT\",\"intervals\":[{\"sets\":1,\"exercises\":[{\"name\":\"HIIT\",\"time\":10},{\"name\":\"Rest\",\"time\":1}]}]},{\"name\":\"Boxing\",\"intervals\":[{\"sets\":6,\"exercises\":[{\"name\":\"Boxing\",\"time\":3},{\"name\":\"Rest\",\"time\":1}]}]},{\"name\":\"Cool Down\",\"intervals\":[{\"sets\":1,\"exercises\":[{\"name\":\"Core\",\"time\":10}]}]}]}";
 
-		app.addWorkout(workout30);
+		app.addWorkout(workoutIntro);
+        app.addWorkout(workout30);
         app.addWorkout(workout60);
         app.addWorkout(workout90);
 
@@ -734,9 +743,25 @@
             app.startTimer(sequence, 0, sequence[0].exercise, sequence[1].exercise, sequence[0].exerciseTime, sequence[0].setCurrent, sequence[0].setTotal);
 			
             app.navStartBtn.setAttribute('hidden', true);
-			app.navEndBtn.removeAttribute('hidden');
+			//app.navPauseBtn.removeAttribute('hidden');
+            app.navEndBtn.removeAttribute('hidden');
 		});
     };
+
+    // app.pauseWorkoutTimer = function() {
+	// 	var key = app.workoutTimer.getAttribute('workout-key');
+    //     var ref = firebase.database().ref('workouts/' + key).once('value').then(function(snapshot) {
+    //         var workout = snapshot.val();
+    //         var sequence = app.calculateWorkoutSequence(workout);
+    //         var summary = app.calculateWorkoutSummary(workout);
+		
+	// 		createjs.Sound.play(app.nextExerciseSoundId);
+    //         app.startTimer(sequence, 0, sequence[0].exercise, sequence[1].exercise, sequence[0].exerciseTime, sequence[0].setCurrent, sequence[0].setTotal);
+			
+    //         app.navStartBtn.setAttribute('hidden', true);
+	// 		app.navEndBtn.removeAttribute('hidden');
+	// 	});
+    // };
 
     app.startTimer = function(sequence, currentSequence, exercise, nextExercise, time, currentSet, totalSets) {
         app.timer = new Timer();
@@ -781,6 +806,7 @@
             app.timer.stop();
         }
         app.navStartBtn.removeAttribute('hidden');
+        //app.navPauseBtn.setAttribute('hidden', true);
         app.navEndBtn.setAttribute('hidden', true);
     };
     
